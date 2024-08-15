@@ -54,9 +54,9 @@ This project is a movie management application that supports multiple storage fo
     ```
 
 ## Static website Screenshot
-    ```bash
-    ![Movies Index Page](./assets/image/static_website.png)
-    ```
+    
+    ![Movies static website](./assets/image/static_website.png)
+    
 
 ## Contributing
 
