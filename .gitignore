@@ -1,0 +1,10 @@
+.codio
+.settings
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.db
+*.csv
+*.json
+.env
