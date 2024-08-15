@@ -33,7 +33,7 @@ This project is a movie management application that supports multiple storage fo
     ```
 
 ## Command Line Menu
-    ```
+    ```bash
     ********** My Movies Database **********
 
     Menu:
@@ -54,8 +54,8 @@ This project is a movie management application that supports multiple storage fo
     ```
 
 ## Static website Screenshot
-    ```
-    ![Movies Index Page](./assets/images/static_website.png)
+    ```bash
+    ![Movies Index Page](./assets/image/static_website.png)
     ```
 
 ## Contributing
