@@ -1,4 +1,5 @@
 import json
+import os
 from storage.istorage import IStorage
 
 class StorageJson(IStorage):
@@ -37,12 +38,13 @@ class StorageJson(IStorage):
         dict: A dictionary containing the loaded movie data. 
         If the file does not exist or cannot be opened, an empty dictionary is returned.
         """
-        try:
-            with open(self.file_path, "r") as file:
-                data = json.load(file)
-        except (FileNotFoundError, json.JSONDecodeError):
-            data = {}
-        return data
+        if os.path.exists(self.file_path):
+            try:
+                with open(self.file_path, "r") as file:
+                    data = json.load(file)
+            except (FileNotFoundError, json.JSONDecodeError):
+                data = {}
+            return data
 
     
     def _save_data(self, data):
@@ -87,7 +89,7 @@ class StorageJson(IStorage):
         return self._load_data()
 
     
-    def add_movie(self, title, year, rating, poster, note=None):
+    def add_movie(self, title, year, rating, poster, language,  country, awards, note=None):
         """
         Adds a new movie to the storage.
 
@@ -107,7 +109,15 @@ class StorageJson(IStorage):
         None
         """
         data = self._load_data()
-        data[title] = {"year": year, "rating": rating, "poster": poster, 'note': note}
+        data[title] = {
+            "year": year, 
+            "rating": rating, 
+            "poster": poster, 
+            "language" : language, 
+            "country": country, 
+            "awards": awards,
+            "note": note
+        }
         self._save_data(data)
 
     
@@ -134,9 +144,9 @@ class StorageJson(IStorage):
             self._save_data(data)
 
     
-    def update_movie(self, title, year=None, rating=None, note=None):
+    def update_movie(self, title, year=None, rating=None, language=None,  country=None, awards=None, note=None):
         """
-        Updates the year and rating of a movie in the storage based on the provided title.
+        Updates the year and rating of a movie in the storage based on the provided title. 
 
         This method retrieves the current movie data from the JSON file using 
         the '_load_data' method.
@@ -159,7 +169,12 @@ class StorageJson(IStorage):
                 data[title]["year"] = year
             if rating is not None:
                 data[title]['rating'] = rating
+            if language is not None:
+                 data[title]["language"] = language
+            if country is not None:
+                data[title]['country'] = country
+            if awards is not None:
+                data[title]['awards'] = awards
             if note is not None:
                 data[title]['note'] = note
-                
             self._save_data(data)

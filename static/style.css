@@ -56,7 +56,10 @@ main {
 }
 
 .movie-title,
-.movie-year {
+.movie-year,
+.movie-language,
+.movie-country, 
+.movie-awards{
   margin: 5px 0;
 }
 
@@ -65,7 +68,10 @@ main {
   font-size: 1em;
 }
 
-.movie-year {
+.movie-year,
+.movie-language,
+.movie-country, 
+.movie-awards {
   color: #666;
   font-size: 0.9em;
 }
@@ -100,7 +106,10 @@ main {
   }
 
   .movie-title,
-  .movie-year {
+  .movie-year,
+  .movie-language,
+  .movie-country, 
+  .movie-awards {
     font-size: 0.9em;
   }
 }

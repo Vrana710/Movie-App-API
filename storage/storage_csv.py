@@ -49,7 +49,10 @@ class StorageCsv(IStorage):
                         movies[title] = {
                             'year': int(row['year']),
                             'rating': float(row['rating']),
-                            'poster': row['poster']
+                            'poster': row['poster'],
+                            'language' : row['language'], 
+                            'country' : row['country'], 
+                            'awards' : row['awards']
                         }
                     except KeyError as e:
                         print(f"\nMissing expected column in row: {row}. Error: {e}")
@@ -76,11 +79,11 @@ class StorageCsv(IStorage):
         None
 
         Raises:
-        - csv.Error: If there is an error saving data to the CSV file.
+        - csv.Error: If there is an error saving data to the CSV file. ,
         """
         try:
             with open(self.file_path, mode='w', newline='', encoding='utf-8') as file:
-                fieldnames = ['title', 'year', 'rating', 'poster', 'note']
+                fieldnames = ['title', 'year', 'rating', 'poster', 'language',  'country', 'awards', 'note']
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
                 for title, info in data.items():
@@ -89,6 +92,9 @@ class StorageCsv(IStorage):
                         'year': info['year'],
                         'rating': info['rating'],
                         'poster': info['poster'],
+                        'language' : info['language'], 
+                        'country' : info['country'], 
+                        'awards' : info['awards'],
                         'note' :'' #Optional
                     })
         except csv.Error as e:
@@ -111,7 +117,7 @@ class StorageCsv(IStorage):
         return self._load_data()
 
     
-    def add_movie(self, title, year, rating, poster, note=None):
+    def add_movie(self, title, year, rating, poster, language, country, awards, note=None):
         """
         Adds a new movie to the CSV file.
 
@@ -127,12 +133,18 @@ class StorageCsv(IStorage):
         - poster (str): The URL of the movie poster.
 
         Returns:
-        None
+        None 
         """
         data = self._load_data()
-        data[title] = {"year": year, "rating": rating, "poster": poster, "note": note}
+        data[title] = {
+            "year": year, 
+            "rating": rating, 
+            "poster": poster, 
+            "language" : language,  
+            "country": country, 
+            "awards": awards, 
+            "note": note}
         self._save_data(data)
-        #print(f"\nMovie {title} added successfully.")
 
     
     def delete_movie(self, title):
@@ -156,9 +168,9 @@ class StorageCsv(IStorage):
             self._save_data(data)
             
 
-    def update_movie(self, title, year=None, rating=None, note=None):
+    def update_movie(self, title, year=None, rating=None,  language=None, country=None, awards=None, note=None):
         """
-        Updates the year and rating of a movie in the CSV file.
+        Updates the year and rating of a movie in the CSV file. 
 
         This method reads the existing movie data from the CSV file,
         checks if a movie with the given title exists, updates its year and rating if found,
@@ -179,8 +191,13 @@ class StorageCsv(IStorage):
                 data[title]["year"] = year
             if rating is not None:
                 data[title]['rating'] = rating
+            if language is not None:
+                 data[title]["language"] = language
+            if country is not None:
+                data[title]['country'] = country
+            if awards is not None:
+                data[title]['awards'] = awards
             if note is not None:
                 data[title]['note'] = note
-                
             self._save_data(data)
             
