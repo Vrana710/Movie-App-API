@@ -87,7 +87,7 @@ class StorageJson(IStorage):
         return self._load_data()
 
     
-    def add_movie(self, title, year, rating, poster):
+    def add_movie(self, title, year, rating, poster, note=None):
         """
         Adds a new movie to the storage.
 
@@ -107,7 +107,7 @@ class StorageJson(IStorage):
         None
         """
         data = self._load_data()
-        data[title] = {"year": year, "rating": rating, "poster": poster}
+        data[title] = {"year": year, "rating": rating, "poster": poster, 'note': note}
         self._save_data(data)
 
     
@@ -134,7 +134,7 @@ class StorageJson(IStorage):
             self._save_data(data)
 
     
-    def update_movie(self, title, year, rating):
+    def update_movie(self, title, year=None, rating=None, note=None):
         """
         Updates the year and rating of a movie in the storage based on the provided title.
 
@@ -155,6 +155,11 @@ class StorageJson(IStorage):
         """
         data = self._load_data()
         if title in data:
-            data[title]["year"] = year
-            data[title]['rating'] = rating
+            if year is not None:
+                data[title]["year"] = year
+            if rating is not None:
+                data[title]['rating'] = rating
+            if note is not None:
+                data[title]['note'] = note
+                
             self._save_data(data)

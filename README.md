@@ -31,9 +31,22 @@ This project is a movie management application that supports multiple storage fo
     ```bash
     python3 main.py
     ```
+5. Run the Script:
+    ```bash
+    Navigate to the directory containing your main.py script in your terminal.
+    Run the script using either:
+    bash
+    Copy code
+    python3 main.py data/data.csv
+    or
+    bash
+    Copy code
+    python3 main.py data/data.json
+    ```
+
 
 ## Command Line Menu
-    ```bash
+    ```
     ********** My Movies Database **********
 
     Menu:

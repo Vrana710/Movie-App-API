@@ -71,7 +71,7 @@ class MovieApp:
             self._storage.add_movie(data["Title"],
                                     data["Year"],
                                     data["imdbRating"],
-                                    data["Poster"])
+                                    data["Poster"]) 
             print(f"\nMovie {title} added successfully.")
         else:
             print(f"\nMovie {title} not found.")
@@ -97,7 +97,17 @@ class MovieApp:
             if response.status_code == 200:
                 data = response.json()
                 if data['Response'] == 'True':
-                    return data
+                    # Parse the year
+                    year = data["Year"]
+                    # Handle ranges and take the first year if needed
+                    if "-" in year:
+                        year = year.split("-")[0]
+                    return {
+                        "Title": data["Title"],
+                        "Year": year,  # Use the parsed year
+                        "imdbRating": data["imdbRating"],
+                        "Poster": data["Poster"]
+                    }
                 else:
                     print(f"\n Error: {data['Error']}")
             else:
@@ -131,29 +141,23 @@ class MovieApp:
         """
         Updates the details of an existing movie in the storage.
 
-        This function prompts the user to enter the title of the movie to update.
-        It then checks if the movie exists in the storage. If the movie exists,
-        it prompts the user to enter the new year of release and the new rating.
-        The function then updates the movie details in the storage using the
-        `_storage.update_movie` method. If the movie does not exist, it prints
-        a message indicating that the movie does not exist.
-
-        Parameters:
-        self (MovieApp): The instance of the MovieApp class.
-
-        Returns:
-        None: This function does not return any value. 
-              It prints a success message if the movie is updated,
-              or a message indicating that the movie does not exist.
+        Prompts the user to enter the movie title, and then updates the year, 
+        rating, or adds a note to the movie in the storage.
         """
         title = input("\nEnter movie title to update: ")
         if self._storage.check_if_exists(title):
-            year = int(input("\nEnter new year of release: "))
-            rating = float(input("\nEnter new rating (1-10): "))
-            self._storage.update_movie(title, year, rating)
+            year = input("\nEnter new year of release (or leave blank to keep current): ")
+            rating = input("\nEnter new rating (1-10, or leave blank to keep current): ")
+            note = input("\nEnter movie notes (or leave blank to keep current): ")
+
+            # Parse inputs
+            year = int(year) if year else None
+            rating = float(rating) if rating else None
+
+            self._storage.update_movie(title, year=year, rating=rating, note=note)
             print(f"\nMovie '{title}' updated.")
         else:
-            print(f"\nMovie {title} doesn't exist.")    
+            print(f"\nMovie {title} doesn't exist.")  
     
     
     def _command_status(self):
@@ -307,8 +311,17 @@ class MovieApp:
         Returns:
         None: This function does not return any value. It prints the sorted list of movies.
         """
+        
+        # Adjust the sorting to handle year ranges
+        def extract_year(movie):
+            try:
+                return int(movie[1]['year'])
+            except ValueError:
+                # Handle any non-numeric year cases
+                return 0
+        
         movies = sorted(self._storage.list_movies().items(), 
-                        key=lambda x: x[1]['year'], 
+                        key=extract_year, 
                         reverse=True)
         for title, details in movies:
             print(f"\n{title} ({details['year']}): {details['rating']}")
@@ -337,7 +350,7 @@ class MovieApp:
         min_rating = float(input("\nEnter minimum rating: "))
         movies = {title: details 
                     for title, details in self._storage.list_movies().items() 
-                        if details['rating'] >= min_rating}
+                        if float(details['rating']) >= min_rating}
         if movies:
             for title, details in movies.items():
                 print(f"\n{title} ({details['year']}): {details['rating']}")
@@ -350,12 +363,12 @@ class MovieApp:
         Generates a static HTML website displaying movie information.
 
         This function retrieves a list of movies from the storage using 
-        the `_storage.list_movies()` method.
+        the _storage.list_movies() method.
         It then constructs an HTML grid of movie posters, titles, and release years.
-        The HTML grid is populated using a template file (`static/index_template.html`).
-        The template file contains placeholders (`__TEMPLATE_TITLE__` and `__TEMPLATE_MOVIE_GRID__`)
+        The HTML grid is populated using a template file (static/index_template.html).
+        The template file contains placeholders (__TEMPLATE_TITLE__ and __TEMPLATE_MOVIE_GRID__)
         that are replaced with the actual title and movie grid.
-        The generated HTML content is then written to a new file (`static/index.html`).
+        The generated HTML content is then written to a new file (static/index.html).
         Finally, a success message is printed to the console.
 
         Parameters:
@@ -368,13 +381,16 @@ class MovieApp:
         movies = self._storage.list_movies()
         movie_grid = ""
         for title, details in movies.items():
+            note = details.get('note', 'No notes available')
             movie_grid += (
-                f"<div class='movie'>\n"
+                f"<li class='movie'>\n"
                 f"<img src='{details['poster']}' alt='{title} poster' "
-                f"class='movie-poster'>\n"
-                f"<li class='movie-title'>{title}</li>\n"
-                f"<li class='movie-year'>{details['year']}</li>\n"
+                f"class='movie-poster' title='{note}'>\n"
+                f"<div class='movie-info'>\n"
+                f"<div class='movie-title'>{title}</div>\n"
+                f"<div class='movie-year'>{details['year']}</div>\n"
                 "</div>\n"
+                "</li>\n"
             )
             
         with open('static/index.html', 'w') as file:
@@ -383,9 +399,9 @@ class MovieApp:
                 content = content.replace('__TEMPLATE_TITLE__', 'My Movie Collection')
                 content = content.replace('__TEMPLATE_MOVIE_GRID__', movie_grid)
                 file.write(content)
-        print("\nWebsite was generated successfully.")
+        print("\nWebsite was generated successfully : Name is `index.html`")
 
-    
+
     def run(self):
         """
         This function runs the main menu loop of the MovieApp.

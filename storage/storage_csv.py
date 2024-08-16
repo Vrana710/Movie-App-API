@@ -80,7 +80,7 @@ class StorageCsv(IStorage):
         """
         try:
             with open(self.file_path, mode='w', newline='', encoding='utf-8') as file:
-                fieldnames = ['title', 'year', 'rating', 'poster']
+                fieldnames = ['title', 'year', 'rating', 'poster', 'note']
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
                 for title, info in data.items():
@@ -88,7 +88,8 @@ class StorageCsv(IStorage):
                         'title': title,
                         'year': info['year'],
                         'rating': info['rating'],
-                        'poster': info['poster']
+                        'poster': info['poster'],
+                        'note' :'' #Optional
                     })
         except csv.Error as e:
             print(f"\nError saving data to {self.file_path}: {e}")
@@ -110,7 +111,7 @@ class StorageCsv(IStorage):
         return self._load_data()
 
     
-    def add_movie(self, title, year, rating, poster):
+    def add_movie(self, title, year, rating, poster, note=None):
         """
         Adds a new movie to the CSV file.
 
@@ -129,7 +130,7 @@ class StorageCsv(IStorage):
         None
         """
         data = self._load_data()
-        data[title] = {"year": year, "rating": rating, "poster": poster}
+        data[title] = {"year": year, "rating": rating, "poster": poster, "note": note}
         self._save_data(data)
         #print(f"\nMovie {title} added successfully.")
 
@@ -155,7 +156,7 @@ class StorageCsv(IStorage):
             self._save_data(data)
             
 
-    def update_movie(self, title, year, rating):
+    def update_movie(self, title, year=None, rating=None, note=None):
         """
         Updates the year and rating of a movie in the CSV file.
 
@@ -174,7 +175,12 @@ class StorageCsv(IStorage):
         """
         data = self._load_data()
         if title in data:
-            data[title]["year"] = year
-            data[title]['rating'] = rating
+            if year is not None:
+                data[title]["year"] = year
+            if rating is not None:
+                data[title]['rating'] = rating
+            if note is not None:
+                data[title]['note'] = note
+                
             self._save_data(data)
             

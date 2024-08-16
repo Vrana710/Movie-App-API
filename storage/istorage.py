@@ -6,23 +6,28 @@ class IStorage(ABC):
         """
         Method to check if Movie exists in database
         """
+        raise NotImplementedError
 
     @abstractmethod
     def list_movies(self):
         """Returns a dictionary of movies."""
         pass
+        raise NotImplementedError
 
     @abstractmethod
-    def add_movie(self, title, year, rating, poster):
+    def add_movie(self, title, year, rating, poster, note=None):
         """Adds a movie to the storage."""
         pass
+        raise NotImplementedError
 
     @abstractmethod
     def delete_movie(self, title):
         """Deletes a movie from the storage."""
         pass
+        raise NotImplementedError
 
     @abstractmethod
-    def update_movie(self, title, year, rating):
+    def update_movie(self, title, year=None, rating=None, note=None):
         """Updates a movie's rating."""
         pass
+        raise NotImplementedError
