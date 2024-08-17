@@ -75,7 +75,8 @@ class MovieApp:
                                     data["Poster"],
                                     data["Language"], 
                                     data["Country"], 
-                                    data["Awards"]) 
+                                    data["Awards"],
+                                    data["imdbID"])  # Add IMDB ID
             print(f"\nMovie {title} added successfully.")
         else:
             print(f"\nMovie {title} not found.")
@@ -84,10 +85,9 @@ class MovieApp:
     def _fetch_movie_data(title):
         """
         Fetches movie data from OMDb API.
-
+        
         Args:
             title (str): The title of the movie to fetch. 
-            This parameter is a string representing the title of the movie.
 
         Returns:
             dict: Movie data as returned by OMDb API.
@@ -98,28 +98,27 @@ class MovieApp:
             response = requests.get(f"http://www.omdbapi.com/?"
                                     f"apikey={OMDB_API_KEY}&"
                                     f"t={title}")
+
             if response.status_code == 200:
                 data = response.json()
                 if data['Response'] == 'True':
-                    # Parse the year
                     year = data["Year"]
-                    # Handle ranges and take the first year if needed
                     if "-" in year:
                         year = year.split("-")[0]
                     return {
                         "Title": data["Title"],
-                        "Year": year,  # Use the parsed year
+                        "Year": year,
                         "imdbRating": data["imdbRating"],
                         "Poster": data["Poster"],
-                        "Language" : data["Language"], 
-                        "Country" : data["Country"], 
-                        "Awards" : data["Awards"]
+                        "Language": data["Language"],
+                        "Country": data["Country"],
+                        "Awards": data["Awards"],
+                        "imdbID": data["imdbID"]  # Add IMDB ID
                     }
                 else:
-                    print(f"\n Error: {data['Error']}")
+                    print(f"\nError: {data['Error']}")
             else:
                 print("\nError: Could not retrieve data from OMDb API.")
-                print(data)
         except requests.RequestException as e:
             print(f"Error: {e}")
         return None
@@ -427,14 +426,17 @@ class MovieApp:
             note = details.get('note', 'No notes available')
             flag_country = self._country_to_flag_emoji(details.get('country', 'Unknown'))
             awards = details.get('awards', 'N/A')
+            imdb_id = details.get('imdbID', '')  # Get IMDB ID
 
             # Build the awards section only if the value is not "N/A"
             awards_section = f"<div class='movie-awards'>Awards: {awards}</div>\n" if awards != "N/A" else ""
 
             movie_grid += (
                 f"<li class='movie'>\n"
+                f"<a href='https://www.imdb.com/title/{imdb_id}' target='_blank'>\n"  # Link to IMDB page
                 f"<img src='{details.get('poster', 'default_poster_url')}' alt='{title} poster' "
                 f"class='movie-poster' title='{note}'>\n"
+                f"</a>\n"
                 f"<div class='movie-info'>\n"
                 f"<div class='movie-title'>{title}</div>\n"
                 f"<div class='movie-year'>{details.get('year', 'Unknown')}</div>\n"

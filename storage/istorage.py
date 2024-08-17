@@ -15,7 +15,7 @@ class IStorage(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def add_movie(self, title, year, rating, poster, language, country, awards, note=None):
+    def add_movie(self, title, year, rating, poster, language, country, awards, imdbID, note=None):
         """Adds a movie to the storage."""
         pass
         raise NotImplementedError

@@ -89,7 +89,7 @@ class StorageJson(IStorage):
         return self._load_data()
 
     
-    def add_movie(self, title, year, rating, poster, language,  country, awards, note=None):
+    def add_movie(self, title, year, rating, poster, language,  country, awards, imdbID, note=None):
         """
         Adds a new movie to the storage.
 
@@ -116,6 +116,7 @@ class StorageJson(IStorage):
             "language" : language, 
             "country": country, 
             "awards": awards,
+            "imdbID": imdbID,  # Optional, default is empty string if not provided in CSV file
             "note": note
         }
         self._save_data(data)

@@ -52,7 +52,9 @@ class StorageCsv(IStorage):
                             'poster': row['poster'],
                             'language' : row['language'], 
                             'country' : row['country'], 
-                            'awards' : row['awards']
+                            'awards' : row['awards'],
+                            'imdbID' : row['imdbID'],
+                            'note': row['note'] if row['note'] else None,  # Convert empty string to None for consistency with other values
                         }
                     except KeyError as e:
                         print(f"\nMissing expected column in row: {row}. Error: {e}")
@@ -83,7 +85,7 @@ class StorageCsv(IStorage):
         """
         try:
             with open(self.file_path, mode='w', newline='', encoding='utf-8') as file:
-                fieldnames = ['title', 'year', 'rating', 'poster', 'language',  'country', 'awards', 'note']
+                fieldnames = ['title', 'year', 'rating', 'poster', 'language',  'country', 'awards', 'imdbID','note']
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
                 for title, info in data.items():
@@ -95,6 +97,7 @@ class StorageCsv(IStorage):
                         'language' : info['language'], 
                         'country' : info['country'], 
                         'awards' : info['awards'],
+                        'imdbID' : info['imdbID'],  # Optional, default is empty string if not provided in CSV file
                         'note' :'' #Optional
                     })
         except csv.Error as e:
@@ -117,7 +120,7 @@ class StorageCsv(IStorage):
         return self._load_data()
 
     
-    def add_movie(self, title, year, rating, poster, language, country, awards, note=None):
+    def add_movie(self, title, year, rating, poster, language, country, awards, imdbID, note=None):
         """
         Adds a new movie to the CSV file.
 
@@ -142,7 +145,8 @@ class StorageCsv(IStorage):
             "poster": poster, 
             "language" : language,  
             "country": country, 
-            "awards": awards, 
+            "awards": awards,
+            "imdbID": imdbID,  # Optional, default is empty string if not provided in CSV file
             "note": note}
         self._save_data(data)
 
