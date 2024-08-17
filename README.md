@@ -29,24 +29,17 @@ This project is a movie management application that supports multiple storage fo
 
 4. Run the application:
     ```bash
-    python3 main.py
-    ```
-5. Run the Script:
-    ```bash
-    Navigate to the directory containing your main.py script in your terminal.
-    Run the script using either:
-    bash
-    Copy code
+    
     python3 main.py data/data.csv
+
     or
-    bash
-    Copy code
+    
     python3 main.py data/data.json
     ```
 
 
 ## Command Line Menu
-    ```
+    ```bash
     ********** My Movies Database **********
 
     Menu:
@@ -63,7 +56,6 @@ This project is a movie management application that supports multiple storage fo
     10. Filter movies
     11. Generate movies website
     Enter choice (0-11): 
-
     ```
 
 ## Static website Screenshot
