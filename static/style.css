@@ -10,14 +10,14 @@ header.list-movies-title {
   padding: 40px 0;
   background: #0f5142;
   background-image: url('../assets/image/header_bg.jpg'); /* Set the background image */
-  background-size: cover; /* Adjust to ensure the entire image is visible */
+  background-size: contain; /* Adjust to ensure the entire image is visible */
   background-repeat: no-repeat; /* Prevent the image from repeating */
   background-position: center; /* Center the image */
   height: 200px; /* Adjust the height to better fit the image */
-  color: white;
+  color: rgba(180, 232, 216, 0.734);
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-  display: flex;
+  display: flex; 
   align-items: center;
   justify-content: center;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7); /* Text shadow for readability */
@@ -26,7 +26,7 @@ header.list-movies-title {
 /* Style for the title text */
 .list-movies-title h1 {
   margin: 0;
-  font-size: 2rem;
+  font-size: 4rem;
 }
 
 main {
