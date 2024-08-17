@@ -1,6 +1,7 @@
 import requests
 import os
 import random
+import pycountry
 from pycountry import countries  # Importing pycountry to convert country names to country codes
 from flask import Flask, render_template
 from storage.istorage import IStorage
@@ -408,8 +409,12 @@ class MovieApp:
         for name in country_names:
             name = name.strip()
             try:
+                # Get the country code from the country name
+                #country = pycountry.countries.lookup(name).country
+                #country_code = country.alpha_2
                 country_code = countries.get(name=name).alpha_2  # Get the country code from the country name
-                flag_emoji = ''.join([chr(ord(char) + 127397) for char in country_code])
+                flag_emoji = ''.join([chr(ord(char) + 127397) 
+                                      for char in country_code])
                 result.append(f"{flag_emoji} {name}")  # Format as "🇺🇸 United States"
             except AttributeError:
                 result.append(f"🏳️ {name}")  # If country is not found, use a generic flag emoji
