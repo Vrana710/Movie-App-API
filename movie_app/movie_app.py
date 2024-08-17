@@ -1,6 +1,7 @@
 import requests
 import os
 import random
+from pycountry import countries  # Importing pycountry to convert country names to country codes
 from flask import Flask, render_template
 from storage.istorage import IStorage
 from dotenv import load_dotenv
@@ -393,6 +394,29 @@ class MovieApp:
             print("\nNo movies found with the specified rating.")
 
 
+    def _country_to_flag_emoji(self, country_name):
+        """
+        Converts a country name to a flag emoji.
+
+        Args:
+            country_name (str): The name of the country.
+
+        Returns:
+            str: The corresponding flag emoji along with the country name.
+        """
+        result = []
+        country_names = country_name.split(',')  # Split the country names if multiple countries are listed
+        for name in country_names:
+            name = name.strip()
+            try:
+                country_code = countries.get(name=name).alpha_2  # Get the country code from the country name
+                flag_emoji = ''.join([chr(ord(char) + 127397) for char in country_code])
+                result.append(f"{flag_emoji} {name}")  # Format as "🇺🇸 United States"
+            except AttributeError:
+                result.append(f"🏳️ {name}")  # If country is not found, use a generic flag emoji
+        return ', '.join(result)  # Join the formatted strings with commas
+
+
     def _command_generate_website(self):
         """
         Generates a static HTML website displaying movie information.
@@ -401,6 +425,12 @@ class MovieApp:
         movie_grid = ""
         for title, details in movies.items():
             note = details.get('note', 'No notes available')
+            flag_country = self._country_to_flag_emoji(details.get('country', 'Unknown'))
+            awards = details.get('awards', 'N/A')
+
+            # Build the awards section only if the value is not "N/A"
+            awards_section = f"<div class='movie-awards'>Awards: {awards}</div>\n" if awards != "N/A" else ""
+
             movie_grid += (
                 f"<li class='movie'>\n"
                 f"<img src='{details.get('poster', 'default_poster_url')}' alt='{title} poster' "
@@ -409,8 +439,8 @@ class MovieApp:
                 f"<div class='movie-title'>{title}</div>\n"
                 f"<div class='movie-year'>{details.get('year', 'Unknown')}</div>\n"
                 f"<div class='movie-language'>{details.get('language', 'Unknown')}</div>\n"
-                f"<div class='movie-country'>{details.get('country', 'Unknown')}</div>\n"
-                f"<div class='movie-awards'>{details.get('awards', 'None')}</div>\n"
+                f"<div class='movie-country'>{flag_country}</div>\n"
+                f"{awards_section}"  # Add awards section only if applicable
                 "</div>\n"
                 "</li>\n"
             )
@@ -422,7 +452,7 @@ class MovieApp:
                 content = content.replace('__TEMPLATE_MOVIE_GRID__', movie_grid)
                 file.write(content)
         print("\nWebsite was generated successfully: Name is `index.html`")
-    
+
     
     def run(self):
         """
