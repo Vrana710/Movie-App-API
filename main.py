@@ -20,10 +20,12 @@ def main():
     # Create an argument parser
     parser = argparse.ArgumentParser(description='Movie Application')
 
-    # Add an argument for the file path
+    # Add an optional argument for the file path
     parser.add_argument(
         'file_path',
         type=str,
+        nargs='?',
+        default='data/data.json',  # Default file path if none provided
         help='Path to the data file (must be a .csv or .json file)'
     )
 
@@ -39,7 +41,7 @@ def main():
     # Check if the directory exists; create it if it does not
     directory = os.path.dirname(absolute_path)
     if not os.path.exists(directory) and directory:
-        print(f"\nError: The directory {directory} was not found.")
+        print(f"\nWarning: The directory '{directory}' was not found.")
         create_directory = input("\nDo you want to create it? (y/n): ").strip().lower()
         if create_directory == 'y':
             try:
@@ -55,14 +57,14 @@ def main():
 
     # Check if the file exists; create it if it does not
     if not os.path.isfile(absolute_path):
-        print(f"\nError: The file {absolute_path} was not found.")
+        print(f"\nWarning: The file '{absolute_path}' was not found.")
         create_file = input("\nDo you want to create it? (y/n): ").strip().lower()
         if create_file == 'y':
             try:
                 if absolute_path.endswith('.json'):
                     with open(absolute_path, 'w') as file:
                         file.write("{}")
-                    print(f"\nFile {absolute_path} created.")
+                    print(f"\nFile '{absolute_path}' created.")
                     print(f"\nYour data will be managed in the file '{absolute_path}'.")
                 elif absolute_path.endswith('.csv'):
                     with open(absolute_path, 'w') as file:
