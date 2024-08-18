@@ -430,15 +430,40 @@ class MovieApp:
         country_names = country_name.split(',')  # Split the country names if multiple countries are listed
         for name in country_names:
             name = name.strip()
+            # Attempt to get the country code from the country name
             try:
-                # Get the country code from the country name
-                country_code = pycountry.countries.lookup(name).alpha_2  # Get the country code from the country name
+                country_code = self._lookup_country_code(name)
                 flag_emoji = ''.join([chr(ord(char) + 127397) 
-                                      for char in country_code])
+                                    for char in country_code])
                 result.append(f"{flag_emoji} {name}")  # Format as "🇺🇸 United States"
-            except AttributeError:
+            except LookupError:
                 result.append(f"🏳️ {name}")  # If country is not found, use a generic flag emoji
         return ', '.join(result)  # Join the formatted strings with commas
+
+    
+    def _lookup_country_code(self, country_name):
+        """
+        Looks up the country code for a given country name.
+
+        Args:
+            country_name (str): The name of the country.
+
+        Returns:
+            str: The country code (e.g., 'US' for United States).
+
+        Raises:
+            LookupError: If the country name cannot be found in the database.
+        """
+        # Normalize country name for lookup
+        country_name = country_name.title()  # Capitalize each word in the country name
+        for country in pycountry.countries:
+            if country_name in [country.name, country.alpha_2]:
+                return country.alpha_2
+        # If exact match not found, try other variations
+        try:
+            return pycountry.countries.lookup(country_name).alpha_2
+        except LookupError:
+            raise LookupError(f"Could not find a record for {country_name!r}")
 
 
     def _command_generate_website(self):
