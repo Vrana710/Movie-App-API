@@ -410,8 +410,6 @@ class MovieApp:
             name = name.strip()
             try:
                 # Get the country code from the country name
-                #country = pycountry.countries.lookup(name).country
-                #country_code = country.alpha_2
                 country_code = countries.get(name=name).alpha_2  # Get the country code from the country name
                 flag_emoji = ''.join([chr(ord(char) + 127397) 
                                       for char in country_code])
