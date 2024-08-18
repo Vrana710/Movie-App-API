@@ -8,3 +8,6 @@ __pycache__/
 *.csv
 *.json
 .env
+.guides
+.idea
+.mypy_cache

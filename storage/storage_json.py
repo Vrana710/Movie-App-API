@@ -45,7 +45,9 @@ class StorageJson(IStorage):
                     data = json.load(file)
             except (FileNotFoundError, json.JSONDecodeError):
                 data = {}
-            return data
+        else:
+            data = {} ## Return an empty dictionary if file does not exist
+        return data
 
     
     def _save_data(self, data):
