@@ -184,8 +184,7 @@ class MovieApp:
         else:
             print(f"\nMovie {title} doesn't exist.")
 
-        
-    
+         
     def _command_status(self):
         """
         Prints statistical information about the movies in the storage.
@@ -201,12 +200,15 @@ class MovieApp:
         """
         try:
             movies = self._storage.list_movies()
-            # Filter out non-numeric ratings
-            ratings = [
-                float(details['rating'])
-                for details in movies.values()
-                if details['rating'].replace('.', '', 1).isdigit()  # Check if it's a valid number
-            ]
+            ratings = []
+
+            # Extract and convert ratings
+            for details in movies.values():
+                try:
+                    rating = float(details['rating'])
+                    ratings.append(rating)
+                except ValueError:
+                    print(f"\nSkipping invalid rating: {details['rating']}")
 
             if not ratings:
                 print("\nNo valid ratings found to compute statistics.")
@@ -217,31 +219,34 @@ class MovieApp:
 
             sorted_ratings = sorted(ratings)
             mid = len(sorted_ratings) // 2
-            if len(sorted_ratings) % 2 == 0:
-                median_rating = (sorted_ratings[mid - 1] + sorted_ratings[mid]) / 2
-            else:
-                median_rating = sorted_ratings[mid]
+            median_rating = (sorted_ratings[mid - 1] + sorted_ratings[mid]) / 2 if len(sorted_ratings) % 2 == 0 else sorted_ratings[mid]
             print(f"\nMedian rating: {median_rating:.1f}")
 
             best_rating = max(ratings)
-            best_movies = [
-                title
-                for title, details in movies.items()
-                if details['rating'] == str(best_rating)
-            ]
-            print("\nBest movie(s) by rating:")
-            for movie in best_movies:
-                print(f"\n{movie} ({best_rating})")
-
             worst_rating = min(ratings)
-            worst_movies = [
-                title
-                for title, details in movies.items()
-                if details['rating'] == str(worst_rating)
-            ]
+
+            # Find best and worst movies
+            best_movies = [title for title, details in movies.items()
+                        if abs(float(details['rating']) - best_rating) < 0.0001]
+            worst_movies = [title for title, details in movies.items()
+                            if abs(float(details['rating']) - worst_rating) < 0.0001]
+
+            # Print best movies
+            print("\nBest movie(s) by rating:")
+            if best_movies:
+                for movie in best_movies:
+                    print(f"\n{movie} ({best_rating})")
+            else:
+                print("\nNo movies found with the best rating.")
+
+            # Print worst movies
             print("\nWorst movie(s) by rating:")
-            for movie in worst_movies:
-                print(f"\n{movie} ({worst_rating})")
+            if worst_movies:
+                for movie in worst_movies:
+                    print(f"\n{movie} ({worst_rating})")
+            else:
+                print("\nNo movies found with the worst rating.")
+
         except ValueError as error:
             print("\nAn error occurred:", error)
 
