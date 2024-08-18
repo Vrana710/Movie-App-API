@@ -85,7 +85,15 @@ class StorageCsv(IStorage):
         """
         try:
             with open(self.file_path, mode='w', newline='', encoding='utf-8') as file:
-                fieldnames = ['title', 'year', 'rating', 'poster', 'language',  'country', 'awards', 'imdbID','note']
+                fieldnames = ['title', 
+                              'year', 
+                              'rating', 
+                              'poster', 
+                              'language',  
+                              'country', 
+                              'awards', 
+                              'imdbID',
+                              'note']
                 writer = csv.DictWriter(file, fieldnames=fieldnames)
                 writer.writeheader()
                 for title, info in data.items():
@@ -108,25 +116,38 @@ class StorageCsv(IStorage):
         """
         Retrieves a list of all movies stored in the CSV file.
 
-        This method reads the CSV file specified by the file_path attribute and returns a dictionary
-        containing movie titles as keys and their respective information (year, rating, poster) as values.
+        This method reads the CSV file specified by the 
+        file_path attribute and returns a dictionary
+        containing movie titles as keys and their respective information 
+        (year, rating, poster) as values.
 
         Parameters:
         - self (StorageCsv): The instance of the StorageCsv class.
 
         Returns:
-        - dict: A dictionary containing movie titles as keys and their respective information (year, rating, poster) as values.
+        - dict: A dictionary containing movie titles as keys and 
+        their respective information (year, rating, poster) as values.
         """
         return self._load_data()
 
     
-    def add_movie(self, title, year, rating, poster, language, country, awards, imdbID, note=None):
+    def add_movie(self, 
+                  title, 
+                  year, 
+                  rating, 
+                  poster, 
+                  language, 
+                  country, 
+                  awards, 
+                  imdbID, 
+                  note=None):
         """
         Adds a new movie to the CSV file.
 
         This method reads the existing movie data from the CSV file, 
-        adds a new movie with the given title, year, rating, and poster,
-        and then saves the updated data back to the CSV file.
+        adds a new movie with the given title, year, rating, poster, language, 
+        country, awards, imdbID, and note (optional), and then saves the updated 
+        data back to the CSV file.
 
         Parameters:
         - self (StorageCsv): The instance of the StorageCsv class.
@@ -134,6 +155,12 @@ class StorageCsv(IStorage):
         - year (int): The release year of the movie.
         - rating (float): The rating of the movie.
         - poster (str): The URL of the movie poster.
+        - language (str): The language of the movie.
+        - country (str): The country where the movie was produced.
+        - awards (str): The awards received by the movie.
+        - imdbID (str): The unique identifier for the movie on IMDb.
+        - note (str, optional): Additional notes about the movie. Defaults to None.
+
 
         Returns:
         None 
@@ -147,7 +174,8 @@ class StorageCsv(IStorage):
             "country": country, 
             "awards": awards,
             "imdbID": imdbID,  # Optional, default is empty string if not provided in CSV file
-            "note": note}
+            "note": note # Optional, default is empty string if not provided in CSV file
+            } 
         self._save_data(data)
 
     
@@ -172,19 +200,30 @@ class StorageCsv(IStorage):
             self._save_data(data)
             
 
-    def update_movie(self, title, year=None, rating=None,  language=None, country=None, awards=None, note=None):
+    def update_movie(self, 
+                     title, 
+                     year=None, 
+                     rating=None,  
+                     language=None, 
+                     country=None, 
+                     awards=None, 
+                     note=None):
         """
-        Updates the year and rating of a movie in the CSV file. 
+        Updates the year, rating, language, country, awards, and note of a movie in the CSV file. 
 
         This method reads the existing movie data from the CSV file,
-        checks if a movie with the given title exists, updates its year and rating if found,
+        checks if a movie with the given title exists, updates its specified fields if provided,
         and then saves the updated data back to the CSV file.
 
         Parameters:
         - self (StorageCsv): The instance of the StorageCsv class.
         - title (str): The title of the movie to be updated.
-        - year (int): The new release year of the movie.
-        - rating (float): The new rating of the movie.
+        - year (int, optional): The new release year of the movie. Defaults to None.
+        - rating (float, optional): The new rating of the movie. Defaults to None.
+        - language (str, optional): The new language of the movie. Defaults to None.
+        - country (str, optional): The new country where the movie was produced. Defaults to None.
+        - awards (str, optional): The new awards received by the movie. Defaults to None.
+        - note (str, optional): The new additional notes about the movie. Defaults to None.
 
         Returns:
         None

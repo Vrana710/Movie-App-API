@@ -1,7 +1,6 @@
 import requests
 import os
 import random
-import pycountry
 from pycountry import countries  # Importing pycountry to convert country names to country codes
 from flask import Flask, render_template
 from storage.istorage import IStorage
@@ -134,8 +133,8 @@ class MovieApp:
 
         Returns:
         None: This function does not return any value. 
-                It prints a success message if the movie is deleted,
-                 or a message indicating that the movie does not exist.
+              It prints a success message if the movie is deleted,
+              or a message indicating that the movie does not exist.
         """
         title = input("\nEnter movie title to delete: ")
         if self._storage.check_if_exists(title):
@@ -148,6 +147,14 @@ class MovieApp:
     def _command_update_movie(self):
         """
         Updates the details of an existing movie in the storage.
+
+        Parameters:
+        self (MovieApp): The instance of the MovieApp class.
+
+        Returns:
+        None: This function does not return any value. 
+              It prints a success message if the movie is updated,
+              or a message indicating that the movie does not exist.
         """
         title = input("\nEnter movie title to update: ")
         if self._storage.check_if_exists(title):
@@ -166,7 +173,13 @@ class MovieApp:
             awards = awards if awards else None 
             note = note if note else None 
 
-            self._storage.update_movie(title, year=year, rating=rating, language=language, country=country, awards=awards, note=note)
+            self._storage.update_movie(title, 
+                                       year=year, 
+                                       rating=rating, 
+                                       language=language, 
+                                       country=country, 
+                                       awards=awards, 
+                                       note=note)
             print(f"\nMovie '{title}' updated.")
         else:
             print(f"\nMovie {title} doesn't exist.")
@@ -319,7 +332,8 @@ class MovieApp:
     
     def _command_sort_movies_by_year(self):
         """
-        Sorts and prints the movies in the storage based on their release years in descending order.
+        Sorts and prints the movies in the storage based on 
+        their release years in descending order.
 
         This function retrieves a list of all movies from the storage using 
         the `_storage.list_movies()` method.
@@ -384,7 +398,8 @@ class MovieApp:
         movies = {
             title: details
             for title, details in self._storage.list_movies().items()
-            if details['rating'].replace('.', '', 1).isdigit() and float(details['rating']) >= min_rating
+            if details['rating'].replace('.', '', 1).isdigit() 
+                        and float(details['rating']) >= min_rating
         }
 
         if movies:
@@ -399,10 +414,12 @@ class MovieApp:
         Converts a country name to a flag emoji.
 
         Args:
-            country_name (str): The name of the country.
+            country_name (str): The name of the country. Multiple country names can be separated by commas.
 
         Returns:
-            str: The corresponding flag emoji along with the country name.
+            str: The corresponding flag emoji(s) along with the country name(s). If a country is not found, 
+                a generic flag emoji (🏳️) is used. If multiple countries are provided, the flag emojis 
+                are separated by commas.
         """
         result = []
         country_names = country_name.split(',')  # Split the country names if multiple countries are listed
@@ -422,6 +439,12 @@ class MovieApp:
     def _command_generate_website(self):
         """
         Generates a static HTML website displaying movie information.
+
+        Parameters:
+        self (MovieApp): The instance of the MovieApp class.
+
+        Returns:
+        None: This function does not return any value. It generates a static HTML website.
         """
         movies = self._storage.list_movies()
         movie_grid = ""

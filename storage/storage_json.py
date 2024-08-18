@@ -7,7 +7,8 @@ class StorageJson(IStorage):
         """
         Initializes a new instance of StorageJson class.
 
-        :param file_path: A string representing the path to the JSON file where the movie data will be stored.
+        :param file_path: A string representing the path to 
+        the JSON file where the movie data will be stored.
         """
         self.file_path = file_path
         
@@ -89,13 +90,24 @@ class StorageJson(IStorage):
         return self._load_data()
 
     
-    def add_movie(self, title, year, rating, poster, language,  country, awards, imdbID, note=None):
+    def add_movie(self, 
+                  title, 
+                  year, 
+                  rating, 
+                  poster, 
+                  language,  
+                  country, 
+                  awards, 
+                  imdbID, 
+                  note=None):
         """
         Adds a new movie to the storage.
 
-        This method takes in the title, year, rating, and poster of a movie,
+        This method takes in the title, year, rating, poster, language, 
+        country, awards, imdbID, and an optional note of a movie,
         and adds them to the storage. The movie data is stored in a dictionary,
-        where the movie title is the key and the movie details (year, rating, poster)
+        where the movie title is the key and the movie details 
+        (year, rating, poster, language, country, awards, imdbID, note)
         are stored as a nested dictionary.
 
         Parameters:
@@ -104,6 +116,11 @@ class StorageJson(IStorage):
         year (int): The release year of the movie.
         rating (float): The rating of the movie.
         poster (str): The URL of the movie poster.
+        language (str): The language of the movie.
+        country (str): The country of the movie.
+        awards (str): The awards received by the movie.
+        imdbID (str): The unique identifier for the movie on IMDb.
+        note (str, optional): Additional notes about the movie. Defaults to None.
 
         Returns:
         None
@@ -116,8 +133,8 @@ class StorageJson(IStorage):
             "language" : language, 
             "country": country, 
             "awards": awards,
-            "imdbID": imdbID,  # Optional, default is empty string if not provided in CSV file
-            "note": note
+            "imdbID": imdbID, 
+            "note": note # Optional, default is empty string if not provided in file
         }
         self._save_data(data)
 
@@ -145,14 +162,22 @@ class StorageJson(IStorage):
             self._save_data(data)
 
     
-    def update_movie(self, title, year=None, rating=None, language=None,  country=None, awards=None, note=None):
-        """
-        Updates the year and rating of a movie in the storage based on the provided title. 
+    def update_movie(self, 
+                     title, 
+                     year=None, 
+                     rating=None, 
+                     language=None,  
+                     country=None, 
+                     awards=None, 
+                     note=None):
+        """  
+        Updates the year, rating, language, country, awards, 
+        and note of a movie in the storage based on the provided title. 
 
         This method retrieves the current movie data from the JSON file using 
         the '_load_data' method.
         It then checks if a movie with the given title exists in the data.
-        If the movie exists, it updates the year and rating of the movie in the data 
+        If the movie exists, it updates the specified attributes of the movie in the data 
         and saves the updated data back to the JSON file using the '_save_data' method.
 
         Parameters:
@@ -160,6 +185,10 @@ class StorageJson(IStorage):
         title (str): The title of the movie to be updated.
         year (int): The new release year of the movie.
         rating (float): The new rating of the movie.
+        language (str): The new language of the movie.
+        country (str): The new country of the movie.
+        awards (str): The new awards of the movie.
+        note (str): The new note of the movie.
 
         Returns:
         None
