@@ -1,7 +1,5 @@
 requests
 flask
-ABC
 pycountry
 pytest
-unittest.mock
 beautifulsoup4
