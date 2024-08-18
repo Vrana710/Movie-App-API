@@ -29,6 +29,10 @@ This project is a movie management application that supports multiple storage fo
 
 4. Run the application:
     ```bash
+
+    python3 main.py 
+
+    or
     
     python3 main.py data/data.csv
 
