@@ -10,3 +10,4 @@ __pycache__/
 .guides
 .idea
 .mypy_cache
+.env
